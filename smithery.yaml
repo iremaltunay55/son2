@@ -1,0 +1,50 @@
+name: hava-durumu-api
+description: "OpenWeather API kullanarak şehirlerin güncel hava durumu bilgilerini sağlayan RESTful API servisi"
+version: "1.0.0"
+
+# Build konfigürasyonu
+build:
+  type: docker
+  dockerfile: Dockerfile
+  context: .
+
+# Runtime konfigürasyonu
+runtime:
+  port: 8080
+  health_check:
+    path: /api/v1/
+    interval: 30s
+    timeout: 10s
+    retries: 3
+
+# Environment variables
+environment:
+  FLASK_ENV: production
+  FLASK_DEBUG: "False"
+  PORT: "8080"
+
+# Secrets (Smithery dashboard'da ayarlanacak)
+secrets:
+  - OPENWEATHER_API_KEY
+
+# Resource limits
+resources:
+  memory: 512Mi
+  cpu: 0.5
+
+# Networking
+networking:
+  public: true
+  domains:
+    - path: /
+      strip_path: false
+
+# Monitoring
+monitoring:
+  enabled: true
+  metrics_path: /metrics
+
+# Logging
+logging:
+  level: info
+  format: json

@@ -62,11 +62,26 @@ class Home(Resource):
         """API ana sayfası ve kullanım bilgileri"""
         return {
             'message': 'Hava Durumu API\'sine hoş geldiniz!',
+            'version': '1.0.0',
+            'status': 'healthy',
             'swagger_ui': '/swagger/',
             'endpoints': {
                 '/api/v1/weather': 'GET - Hava durumu sorgulama',
-                '/swagger/': 'GET - API dokümantasyonu'
+                '/swagger/': 'GET - API dokümantasyonu',
+                '/health': 'GET - Health check'
             }
+        }
+
+# Health check endpoint'i (Smithery için)
+@api.route('/health')
+class HealthCheck(Resource):
+    def get(self):
+        """Health check endpoint for monitoring"""
+        return {
+            'status': 'healthy',
+            'service': 'weather-api',
+            'version': '1.0.0',
+            'timestamp': '2025-05-27'
         }
 
 # Hava durumu endpoint'i
@@ -232,17 +247,20 @@ class WeatherByCity(Resource):
             api.abort(500, f"Beklenmeyen bir hata oluştu: {str(e)}")
 
 if __name__ == '__main__':
-    # Smithery için port konfigürasyonu
+    # Smithery/Docker için port konfigürasyonu
     port = int(os.getenv('PORT', 5001))
+    debug_mode = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
 
     print("🌤️  Hava Durumu API'si (Düzeltilmiş Swagger UI ile) başlatılıyor...")
-    print(f"📍 Ana sayfa: http://localhost:{port}/api/v1/")
-    print(f"📚 Swagger UI: http://localhost:{port}/swagger/")
-    print(f"🌡️  Hava durumu: http://localhost:{port}/api/v1/weather?city=Istanbul")
+    print(f"📍 Ana sayfa: http://0.0.0.0:{port}/api/v1/")
+    print(f"📚 Swagger UI: http://0.0.0.0:{port}/swagger/")
+    print(f"🌡️  Hava durumu: http://0.0.0.0:{port}/api/v1/weather?city=Istanbul")
+    print(f"🔧 Debug mode: {debug_mode}")
+    print(f"🌐 Port: {port}")
     print("🔄 Çıkmak için Ctrl+C")
 
     app.run(
-        debug=os.getenv('FLASK_DEBUG', 'False').lower() == 'true',
+        debug=debug_mode,
         host='0.0.0.0',
         port=port
     )
