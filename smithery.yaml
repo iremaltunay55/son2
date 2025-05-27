@@ -1,6 +1,6 @@
 name: hava-durumu-api
-description: "OpenWeather API kullanarak şehirlerin güncel hava durumu bilgilerini sağlayan RESTful API servisi"
-version: "1.0.0"
+description: "OpenWeather API kullanarak şehirlerin güncel hava durumu bilgilerini sağlayan RESTful API servisi - Swagger UI ile"
+version: "1.0.1"
 
 # Build konfigürasyonu
 build:

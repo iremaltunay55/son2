@@ -247,11 +247,11 @@ class WeatherByCity(Resource):
             api.abort(500, f"Beklenmeyen bir hata oluştu: {str(e)}")
 
 if __name__ == '__main__':
-    # Smithery/Docker için port konfigürasyonu
+    # Cloud deployment için port konfigürasyonu (Render, Railway, Heroku uyumlu)
     port = int(os.getenv('PORT', 5001))
     debug_mode = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
 
-    print("🌤️  Hava Durumu API'si (Düzeltilmiş Swagger UI ile) başlatılıyor...")
+    print("🌤️  Hava Durumu API'si başlatılıyor...")
     print(f"📍 Ana sayfa: http://0.0.0.0:{port}/api/v1/")
     print(f"📚 Swagger UI: http://0.0.0.0:{port}/swagger/")
     print(f"🌡️  Hava durumu: http://0.0.0.0:{port}/api/v1/weather?city=Istanbul")
@@ -259,8 +259,10 @@ if __name__ == '__main__':
     print(f"🌐 Port: {port}")
     print("🔄 Çıkmak için Ctrl+C")
 
+    # Production server için Gunicorn kullanımı önerilir
     app.run(
         debug=debug_mode,
         host='0.0.0.0',
-        port=port
+        port=port,
+        threaded=True  # Performans için
     )
